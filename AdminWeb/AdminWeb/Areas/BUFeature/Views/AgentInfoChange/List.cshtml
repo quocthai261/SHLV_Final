@@ -1,4 +1,4 @@
-﻿@using AdminWeb.Areas.BU.Controllers;
+﻿@using AdminWeb.Areas.BUFeature.Controllers;
 @using AdminWeb.Models
 @using Microsoft.AspNetCore.Mvc.Localization
 
@@ -121,7 +121,7 @@
                                 columns.Add().DataField(nameof(AgentInfoChangeResponseModel.AgentInforChangeId)).Visible(false);
                                 columns.Add().DataField(nameof(AgentInfoChangeResponseModel.RequestCode)).Caption("Mã yêu cầu");
                                 columns.Add().DataField(nameof(AgentInfoChangeResponseModel.AgentCode)).Caption("Mã đại lý");
-                                columns.Add().DataField(nameof(AgentInfoChangeResponseModel.TVTCName)).Caption("Tên TVTC");
+                                columns.Add().DataField(nameof(AgentInfoChangeResponseModel.OldAgentName)).Caption("Tên TVTC");
                                 columns.Add().DataField(nameof(AgentInfoChangeResponseModel.Title)).Caption("Chức danh");
                                 columns.Add().DataField(nameof(AgentInfoChangeResponseModel.RequestTypeName)).Caption("Loại yêu cầu");
                                 columns.Add().DataField(nameof(AgentInfoChangeResponseModel.StatusName)).Caption("Trạng thái");

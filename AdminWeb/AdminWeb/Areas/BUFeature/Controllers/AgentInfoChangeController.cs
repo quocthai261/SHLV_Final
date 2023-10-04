@@ -5,7 +5,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdminWeb.Areas.BU.Controllers
+namespace AdminWeb.Areas.BUFeature.Controllers
 {
     public class AgentInfoChangeController : BaseBUController
     {
@@ -32,12 +32,12 @@ namespace AdminWeb.Areas.BU.Controllers
             }
         }
 
-        public IActionResult Detail(long id) 
+        public IActionResult Detail(long id)
         {
             var responseModel = model.First(p => p.AgentInforChangeId == id);
             if (responseModel.Status == 1)
             {
-                return View("DetailApproved",responseModel);
+                return View("DetailApproved", responseModel);
             }
             if (responseModel.Status == 2)
             {
@@ -48,8 +48,6 @@ namespace AdminWeb.Areas.BU.Controllers
                 return View("DetailRejected", responseModel);
             }
             return View("List");
-
-            
         }
         public IActionResult DetailProccessing(long id)
         {
@@ -114,40 +112,61 @@ namespace AdminWeb.Areas.BU.Controllers
                         AgentInforChangeId = 1,
                         RequestCode = "RCAI22_000042",
                         AgentCode = "92011882",
-                        TVTCName = "ĐỖ THỊ THANH THÚY",
+                        AgentName = "ĐỖ TRƯỜNG AN",
+                        OldAgentName = "ĐỖ THỊ THANH THÚY",
+                        DOB = DateTime.Now,
+                        OldDOB = DateTime.Today,
+                        Gender = "Nam",
+                        OldGender = "Nữ",
                         Title = "Unit Manager",
                         RequestType = 1,
                         RequestTypeName = "Thông tin email",
                         Status = 1,
                         StatusName = "Đã duyệt",
-
                         CreationDate = DateTime.Now,
+                        IdCardNumber = "000000536",
+                        OldIdCardNumber = "040086030460",
+                        Email="thanhthuy@gmail.com"
                     },
             new AgentInfoChangeResponseModel {
                         AgentInforChangeId = 2,
                         RequestCode = "RCAI23_000011",
                         AgentCode = "91809576",
-                        TVTCName = "ĐOÀN THỊ LIÊN",
+                        AgentName = "ĐOÀN THỊ LIÊN",
                         Title = "Service Agent",
                         RequestType = 1,
                         RequestTypeName = "Thông tin email",
                         Status = 2,
                         StatusName = "Đang chờ xử lý",
-
                         CreationDate = DateTime.Now,
+                        OldAgentName = "ĐỖ TRƯỜNG AN",
+                           DOB = DateTime.Now,
+                        OldDOB = DateTime.Today,
+                        Gender = "Nữ",
+                        OldGender = "Nam",
+                        IdCardNumber = "000000536",
+                        OldIdCardNumber = "040086030460",
+                        Email="truongan@gmail.com"
                     },
             new AgentInfoChangeResponseModel {
                         AgentInforChangeId = 3,
                         RequestCode = "RCAI22_000041",
                         AgentCode = "92011882",
-                        TVTCName = "ĐINH THỊ NGÀ",
+                        AgentName = "ĐỖ TRƯỜNG AN",
                         Title = "Senior District Manager",
                         RequestType = 2,
                         RequestTypeName = "Thông tin địa chỉ",
-                        Status = 1,
-                        StatusName = "Đã duyệt",
-
+                        Status = 3,
+                        StatusName = "Đã hủy",
                         CreationDate = DateTime.Now,
+                          OldAgentName = "ĐINH THỊ NGÀ",
+                           DOB = DateTime.Now,
+                        OldDOB = DateTime.Today,
+                        Gender = "Nam",
+                        OldGender = "Nữ",
+                        IdCardNumber = "000000536",
+                        OldIdCardNumber = "040086030460",
+                        Email="ngadinh@gmail.com"
                     },
         };
     }

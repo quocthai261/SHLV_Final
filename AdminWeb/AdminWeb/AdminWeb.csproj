@@ -40,4 +40,8 @@
     <Folder Include="Dtos\ApiRequest\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Areas\BUFeature\Views\ApprovalAgentTermination\List.cshtml" />
+  </ItemGroup>
+
 </Project>

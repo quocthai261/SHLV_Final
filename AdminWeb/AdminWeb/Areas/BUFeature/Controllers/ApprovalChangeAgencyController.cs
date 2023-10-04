@@ -5,7 +5,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdminWeb.Areas.BU.Controllers
+namespace AdminWeb.Areas.BUFeature.Controllers
 {
     public class ApprovalChangeAgencyController : BaseBUController
     {
