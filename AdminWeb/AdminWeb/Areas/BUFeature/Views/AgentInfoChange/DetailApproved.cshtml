@@ -1,0 +1,233 @@
+﻿@model AgentInfoChangeResponseModel
+
+<div class="modal fade" id="popup-create" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Thông tin chi tiết</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" onclick="onButtonSaveClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnClosee" onclick="onButtonCloseClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid p-0">
+    <div class="card card-body form-control-ui">
+        <div class="row button-right-row">
+            <div class="col-md-12">
+                <button class="btn btn-purple-style" type="button" onclick="onBackClicked()"><span class="glyphicon glyphicon-triangle-left"></span> Trở về</button>
+@*                 <button class="btn btn-purple-style" type="button" onclick="acceptClicked()">Duyệt</button>
+                <button class="btn btn-purple-style" type="button" onclick="denyClicked()">Từ chối</button>
+                <button class="btn btn-purple-style" type="button" onclick="sendRequestClicked()">Gửi phản hồi</button> *@
+
+            </div>
+        </div>
+        <h1 class="h4 mb-3 form-title"><strong>Thông tin chi tiết</strong></h1>
+        <div class="row">
+            <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="form-group">
+                    @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                        .Label("Mã số đại lý")
+                        .Value(Model.AgentCode)
+                        .LabelMode(EditorLabelMode.Floating)
+                        .ReadOnly(true)
+                        .MaxLength(100))
+                </div>
+            </div>
+            <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="form-group">
+                    @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                        .Label("Tên đại lý")
+                        .Value(Model.TVTCName)
+                        .LabelMode(EditorLabelMode.Floating)
+                        .ReadOnly(true)
+                        .MaxLength(100))
+                </div>
+            </div>
+            <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="form-group">
+                    @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                        .Label("Trạng thái")
+                        .Value(Model.StatusName)
+                        .LabelMode(EditorLabelMode.Floating)
+                        .ReadOnly(true)
+                        .MaxLength(100))
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <div class="form-group">
+                    @(Html.DevExtreme().TextArea().ElementAttr("class", "required-validation")
+                        .Label("Lý do từ chối")
+                        .Value(Model.ReasonReject)
+                        .LabelMode(EditorLabelMode.Floating)
+                        .ReadOnly(true)
+                        .MaxLength(1000))
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card card-body form-control-ui">
+        <h1 class="h4 mb-3 form-title"><strong>Thông tin thay đổi</strong></h1>
+        <div class="row">
+            <div class="col-12 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <label style="padding-top: 10px;">Email: </label>
+            </div>
+            <div class="col-12 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                <div class="form-group">
+                    @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                        .Label("Thông tin mới")
+                        .Value("nguyenvan@gmail.com")
+                        .LabelMode(EditorLabelMode.Floating)
+                        .ReadOnly(true)
+                        .MaxLength(100))
+                </div>
+            </div>
+            <div class="col-12 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                <div class="form-group">
+                    @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                        .Label("Thông tin hiện tại")
+                        .Value("tranthiminh@gmail.com")
+                        .LabelMode(EditorLabelMode.Floating)
+                        .ReadOnly(true)
+                        .MaxLength(100))
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+<div class="modal fade" id="popupDeny" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-body">
+                <div class="">
+                    <h1 class="h4 mb-3 form-title"><strong>Từ chối</strong></h1>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextArea().ElementAttr("class", "required-validation")
+                                .Label("Lý do từ chối").Value("").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(1000))
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveDeny" onclick="onButtonSaveDenyClicked()" type="button" class="btn btn-purple-style">Từ chối</button>
+                <button id="btnCloseDeny" onclick="onButtonCloseDenyClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="popupSendRequest" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-body">
+                <div class="">
+                    <h1 class="h4 mb-3 form-title"><strong>Gửi phản hồi</strong></h1>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextArea().ElementAttr("class", "required-validation")
+                                .Label("Nhập nội dung phản hồi").Value("").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(1000))
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="onButtonSaveSendRequestClicked()" type="button" class="btn btn-purple-style">Gửi</button>
+                <button onclick="onButtonCloseSendRequestClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onBackClicked() {
+        location.href = '@Url.Action("Index", "AgentInfoChange", new { area = "BUFeature" })';
+    }
+
+    function onButtonSaveClicked() {
+        var modal = document.getElementById("popup-create");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseClicked() {
+        var modal = document.getElementById("popup-create");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+    function acceptClicked() {
+        //notify("Cập nhật dữ liệu thành công", "success");
+        var myDialog = confirmDialog("Bạn có muốn duyệt không?", "", "Có", "Không");
+        myDialog.show().done(function (dialogResult) {
+            if (dialogResult.buttonText === "Có") {
+                notify("Cập nhật dữ liệu thành công", "success");
+            }
+        });
+    }
+    function denyClicked() {
+        //notify("Cập nhật dữ liệu thành công", "success");
+        var modal = document.getElementById("popupDeny");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+
+    }
+
+    function onButtonSaveDenyClicked() {
+        var modal = document.getElementById("popupDeny");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseDenyClicked() {
+        var modal = document.getElementById("popupDeny");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+    function sendRequestClicked() {
+        //notify("Cập nhật dữ liệu thành công", "success");
+        var modal = document.getElementById("popupSendRequest");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onButtonSaveSendRequestClicked() {
+        var modal = document.getElementById("popupSendRequest");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Gửi phản hồi thành công", "success");
+    }
+
+    function onButtonCloseSendRequestClicked() {
+        var modal = document.getElementById("popupSendRequest");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>
