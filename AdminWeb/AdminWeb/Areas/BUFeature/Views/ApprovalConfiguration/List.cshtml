@@ -1,0 +1,213 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.BU.Controllers;
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<ApprovalConfigurationController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+@using (Html.DevExtreme().NamedTemplate("DeleteButton_cellTemplate"))
+{
+    <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleApprovalConfigurationClicked()"></span>
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Quy trình chuyển đổi đại lý</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridApprovalConfiguration")
+                        .DataSource(d => d.WebApi()
+                        .Area("BUFeature")
+                        .Controller("ApprovalConfiguration")
+                        .LoadAction("GetApprovalConfigurationListApi")
+                        .Key("ApprovalConfigurationId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowUpdating(true);
+                            editing.AllowAdding(true);
+                        })
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridApprovalConfiguration")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(70).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleApprovalConfigurationClicked()"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(ApprovalConfigurationResponseModel.ApprovalConfigurationId)).Visible(false);
+                            columns.Add().DataField(nameof(ApprovalConfigurationResponseModel.TypeCode)).Caption("Loại yêu cầu").Lookup(lookup => lookup
+                            .DataSource(d => d.WebApi()
+                            .Area("Category")
+                            .Controller("AgentMoveTypes")
+                            .LoadAction("GetAgentMoveTypesList")
+                            .Key("AgentMoveTypeId"))
+                            .DisplayExpr(new JS("customeTypeDisplayDetail"))
+                            .ValueExpr("TypeCode")
+                            );
+                            columns.Add().DataField(nameof(ApprovalConfigurationResponseModel.PositionCode)).Caption("Vị trí được phê duyệt").Lookup(lookup => lookup
+                            .DataSource(d => d.WebApi()
+                            .Area("Category")
+                            .Controller("Position")
+                            .LoadAction("GetPositionList")
+                            .Key("PositionId"))
+                            .DisplayExpr(new JS("customePositionDisplayDetail"))
+                            .ValueExpr("PositionCode")
+                            );
+                            columns.Add().DataField(nameof(ApprovalConfigurationResponseModel.Description)).Caption("Mô tả");
+                            columns.Add().DataField(nameof(ApprovalConfigurationResponseModel.ApplyDate)).Caption("Ngày áp dụng").Alignment(HorizontalAlignment.Center);
+                        })
+                        .ColumnHidingEnabled(false)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        .MasterDetail(md =>
+                        {
+                            md.Enabled(true);
+                            md.Template(@<Text>
+                                <div class="container-fluid p-0">
+                                    <h1 class="h4 mb-3 form-title"><strong>Tiến trình phê duyệt</strong></h1>
+                                    <div class="row">
+                                        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+                                            <div class="card flex-fill w-100 form-control-ui">
+                                                <div class="card-body py-3">
+                                                    @(
+                                                                Html.DevExtreme().DataGrid()
+                                                                .DataSource(d => d.WebApi()
+                                                                .Controller("ApprovalConfigurationDetail")
+                                                                .LoadAction("GetApprovalConfigurationDetailList")
+                                                                .LoadParams(new { id = new JS("data.ApprovalConfigurationId") })
+                                                                )
+                                                                .ShowBorders(true)
+                                                                .Selection(s => s.Mode(SelectionMode.Single))
+                                                                .Editing(editing =>
+                                                                {
+                                                                            editing.Mode(GridEditMode.Batch);
+                                                                            editing.AllowUpdating(true);
+                                                                            editing.AllowAdding(true);
+                                                                        })
+                                                                .Columns(columns =>
+                                                                {
+                                                                            columns.Add().Caption("").Width(70).CellTemplate(new TemplateName("DeleteButton_cellTemplate")).Alignment(HorizontalAlignment.Center);
+                                                                            columns.Add().DataField(nameof(ApprovalConfigurationDetailResponseModel.ApprovalConfigurationDetailId)).Visible(false);
+                                                                            columns.Add().DataField(nameof(ApprovalConfigurationDetailResponseModel.Position)).Caption("Chỉ tiêu kế hoạch kinh doanh").Lookup(lookup => lookup
+                                                                            .DataSource(d => d.WebApi()
+                                                                            .Area("Category")
+                                                                            .Controller("Position")
+                                                                            .LoadAction("GetPositionList")
+                                                                            .Key("PositionId"))
+                                                                            .DisplayExpr(new JS("customePositionDisplayDetail"))
+                                                                            .ValueExpr("PositionCode")
+                                                                            );
+                                                                            columns.Add().DataField(nameof(ApprovalConfigurationDetailResponseModel.Type)).Caption("Loại vị trí phê duyệt").Lookup(lookup => lookup
+                                                                            .DataSource(d => d.WebApi()
+                                                                            .Area("BUFeature")
+                                                                            .Controller("ApprovalConfigurationDetail")
+                                                                            .LoadAction("GetApprovalTypeList")
+                                                                            .Key("ApprovalTypeId"))
+                                                                            .DisplayExpr("ApprovalTypeName")
+                                                                            .ValueExpr("ApprovalTypeId")
+                                                                            );
+                                                                            columns.Add().Caption("Bước phê duyệt").DataField(nameof(ApprovalConfigurationDetailResponseModel.ProcessStep)).Alignment(HorizontalAlignment.Center);
+                                                                            columns.Add().Caption("Mô tả").DataField(nameof(ApprovalConfigurationDetailResponseModel.Description));
+                                                                            columns.Add().DataField(nameof(ApprovalConfigurationDetailResponseModel.IsActive)).Caption("Sử dụng").DataType(GridColumnDataType.Boolean).Alignment(HorizontalAlignment.Center).Width(150);
+                                                                        })
+                                                                .ColumnHidingEnabled(false)
+                                                                .AllowColumnResizing(true)
+                                                                .ColumnAutoWidth(true)
+                                                                .ColumnMinWidth(50)
+                                                                .ShowRowLines(true)
+                                                                .FilterRow(f => f.Visible(false))
+                                                                .HeaderFilter(f => f.Visible(false))
+                                                                .GroupPanel(p => p.Visible(false))
+                                                                .Grouping(g => g.AutoExpandAll(false))
+                                                                .RemoteOperations(false)
+                                                                .Paging(paging => paging.PageSize(10))
+                                                                )
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Text>);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // function onAddNewApprovalConfigurationClicked() {
+
+    //     var modal = document.getElementById("popupApprovalConfiguration");
+    //     modal.classList.add("show", "in");
+    //     modal.style.display = "block";
+    // }
+
+    // function onEditApprovalConfigurationClicked() {
+
+    //     var modal = document.getElementById("popupApprovalConfiguration");
+    //     modal.classList.add("show", "in");
+    //     modal.style.display = "block";
+    // }
+
+    // function onDateleApprovalConfigurationClicked() {
+    //     var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+    //     myDialog.show().done(function (dialogResult) {
+    //         if (dialogResult.buttonText === "Có") {
+    //             notify("Xóa dữ liệu thành công", "success");
+    //         }
+    //     });
+    // }
+
+    function exportingGridApprovalConfiguration(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ApprovalConfiguration');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'ApprovalConfigurationList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+
+
+    function customeTypeDisplayDetail(item) {
+        if (item !== null && item !== undefined)
+            return item.TypeCode + " - " + item.TypeName;
+        return null;
+    }
+    function customePositionDisplayDetail(item) {
+        if (item !== null && item !== undefined)
+            return item.PositionCode + " - " + item.PositionName;
+        return null;
+    }
+</script>
+
